@@ -6,6 +6,16 @@ const Button = ({ handleClick, text }) => (
   </>
 );
 
+const AnecdotePart = ({ title, anecdote, voteCount }) => {
+  return (
+    <div>
+      <h1>{title}</h1>
+      {anecdote} <br />
+      has {voteCount} votes
+    </div>
+  );
+};
+
 const App = () => {
   const anecdotes = [
     "If it hurts, do it more often.",
@@ -23,6 +33,7 @@ const App = () => {
 
   const [selected, setSelected] = useState(0);
   const [votes, setVotes] = useState(initialVotes);
+  const [max, setMax] = useState(0);
 
   const randomSelection = () => {
     setSelected(Math.floor(Math.random() * Math.floor(anecdotes.length)));
@@ -31,15 +42,26 @@ const App = () => {
   const addVoteToSelection = () => {
     const newArr = [...votes];
     newArr[selected] += 1;
+    if (newArr[selected] > newArr[max]) setMax(selected);
     setVotes(newArr);
   };
 
+  console.log(votes);
+
   return (
     <div>
-      {anecdotes[selected]} <br />
+      <AnecdotePart
+        title="Anecdote of the day"
+        anecdote={anecdotes[selected]}
+        voteCount={votes[selected]}
+      />
       <Button handleClick={addVoteToSelection} text="vote" />
       <Button handleClick={randomSelection} text="next anecdote" /> <br />
-      has {votes[selected]} votes
+      <AnecdotePart
+        title="Anecdote with most votes"
+        anecdote={anecdotes[max]}
+        voteCount={votes[max]}
+      />
     </div>
   );
 };
