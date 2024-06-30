@@ -7,9 +7,10 @@ const Button = ({ handleClick, text }) => (
 );
 
 const StatisticLine = ({ name, value }) => (
-  <>
-    {name} {value} <br />
-  </>
+  <tr>
+    <td>{name}</td>
+    <td>{value}</td>
+  </tr>
 );
 
 const Statistics = (props) => {
@@ -19,15 +20,20 @@ const Statistics = (props) => {
   if (total === 0) return <div>No feedback given</div>;
 
   const average = () => (good - bad) / total;
-  const percentageOfPositives = () => (good / total) * 100;
+  const positives = () => (good / total) * 100;
 
   return (
     <div>
-      <StatisticLine name="good" value={good} />
-      <StatisticLine name="neutral" value={neutral} />
-      <StatisticLine name="bad" value={bad} />
-      <StatisticLine name="average" value={average()} />
-      <StatisticLine name="positive" value={percentageOfPositives() + " %"} />
+      <table>
+        <tbody>
+          <StatisticLine name="good" value={good} />
+          <StatisticLine name="neutral" value={neutral} />
+          <StatisticLine name="bad" value={bad} />
+          <StatisticLine name="total" value={total} />
+          <StatisticLine name="average" value={average()} />
+          <StatisticLine name="positive" value={positives() + " %"} />
+        </tbody>
+      </table>
     </div>
   );
 };
