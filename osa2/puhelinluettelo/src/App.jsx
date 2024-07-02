@@ -1,19 +1,24 @@
 import { useState } from "react";
 import AddPerson from "./components/AddPerson";
 import Person from "./components/Person";
+import FilterField from "./components/FilterField";
 
 const App = () => {
   const protoBook = [
     { name: "Arto Hellas", number: "044-7654321" },
     { name: "Robert Fripp", number: "+44-020-2133453" },
     { name: "Keith Emerson", number: "+44-020-1236542" },
-    { name: "Neil Peart", number: "+1-310-2145831}" },
+    { name: "Neil Peart", number: "+1-310-2145831" },
     { name: "Tosin Abasi", number: "+1-802-5324008" },
     { name: "Paavo Väyrynen", number: "040-1234567" },
   ];
 
   const [persons, setPersons] = useState(protoBook);
-  const [inputs, setInputs] = useState({ newName: "", newNumber: "" });
+  const [inputs, setInputs] = useState({
+    newName: "",
+    newNumber: "",
+    newFilter: "",
+  });
 
   const handleAddition = (event) => {
     event.preventDefault();
@@ -38,6 +43,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <FilterField
+        newFilter={inputs.newFilter}
+        handleInputField={handleInputField}
+      />
+      <h2>add a new</h2>
       <AddPerson
         persons={persons}
         handleInputField={handleInputField}
@@ -46,9 +56,13 @@ const App = () => {
         newNumber={inputs.newNumber}
       />
       <h2>Numbers</h2>
-      {persons.map((p) => (
-        <Person key={p.name} name={p.name} number={p.number} />
-      ))}
+      <div>
+        {persons.reduce((arr, p) => {
+          return p.name.toLowerCase().includes(inputs.newFilter.toLowerCase())
+            ? [...arr, <Person key={p.name} name={p.name} number={p.number} />]
+            : arr;
+        }, [])}
+      </div>
     </div>
   );
 };
