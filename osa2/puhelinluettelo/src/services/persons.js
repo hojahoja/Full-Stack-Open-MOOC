@@ -9,4 +9,7 @@ const create = (newObject) =>
 const remove = (id) =>
   axios.delete(`${baseUrl}/${id}`).then((response) => response.data);
 
-export default { getAll, create, remove };
+const update = (id, newObject) =>
+  axios.put(`${baseUrl}/${id}`, newObject).then((response) => response.data);
+
+export default { getAll, create, remove, update };

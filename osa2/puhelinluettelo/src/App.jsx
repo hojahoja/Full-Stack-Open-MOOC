@@ -19,14 +19,26 @@ const App = () => {
   const handleAddition = (event) => {
     event.preventDefault();
 
-    if (persons.some((p) => p.name === inputs.newName)) {
-      alert(`${inputs.newName} is already in the phonebook`);
-    } else {
+    const updateNumber = () => {
+      // prettier-ignore
+      if (confirm(`${inputs.newName} is already in the phonebook do you want to replace their number with the new one?`)) {
+        const changedPerson = {...persons.find((p) => p.name === inputs.newName), number: inputs.newNumber};
+        personService
+        .update(changedPerson.id, changedPerson)
+        .then(returnedPerson => setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson)));
+      }
+    };
+
+    const addPerson = () => {
       const personObject = { name: inputs.newName, number: inputs.newNumber };
       personService
         .create(personObject)
         .then((returnedPerson) => setPersons(persons.concat(returnedPerson)));
-    }
+    };
+
+    persons.some((p) => p.name === inputs.newName)
+      ? updateNumber()
+      : addPerson();
     setInputs((i) => ({ ...i, newName: "", newNumber: "" }));
   };
 
