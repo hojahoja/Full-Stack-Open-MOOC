@@ -38,6 +38,18 @@ const App = () => {
     setInputs((i) => ({ ...i, [name]: value }));
   };
 
+  const handleDeletion = (event, id, name) => {
+    event.preventDefault();
+
+    if (confirm(`Do you want to remove ${name} from the phonebook?`)) {
+      personService
+        .remove(id)
+        .then((removedPerson) =>
+          setPersons(persons.filter((p) => p.id !== removedPerson.id))
+        );
+    }
+  };
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -57,7 +69,15 @@ const App = () => {
       <div>
         {persons.reduce((arr, p) => {
           return p.name.toLowerCase().includes(inputs.newFilter.toLowerCase())
-            ? [...arr, <Person key={p.name} name={p.name} number={p.number} />]
+            ? [
+                ...arr,
+                <Person
+                  key={p.name}
+                  name={p.name}
+                  number={p.number}
+                  handleDeletion={(e) => handleDeletion(e, p.id, p.name)}
+                />,
+              ]
             : arr;
         }, [])}
       </div>
