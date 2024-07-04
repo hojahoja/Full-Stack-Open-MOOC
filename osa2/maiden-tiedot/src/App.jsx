@@ -18,6 +18,10 @@ function App() {
     setSearchTerm(event.target.value);
   };
 
+  const handleShowButton = (event) => {
+    setSearchTerm(event.target.name);
+  };
+
   if (countries === null) return null;
 
   const filteredCountries = countries.filter((c) =>
@@ -28,6 +32,7 @@ function App() {
       <Field handleFieldChange={handleFieldChange} />
       <div>
         <CountryList
+          handleShowButton={handleShowButton}
           list={
             filteredCountries.length < 11
               ? filteredCountries.map((c) => c.name.common)
