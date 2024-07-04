@@ -3,6 +3,7 @@ import AddPerson from "./components/AddPerson";
 import Person from "./components/Person";
 import FilterField from "./components/FilterField";
 import personService from "./services/persons";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,10 +12,20 @@ const App = () => {
     newNumber: "",
     newFilter: "",
   });
-
+  const [statusMessage, setStatusMessage] = useState({
+    message: null,
+    isError: false,
+  });
   useEffect(() => {
     personService.getAll().then((initialPersons) => setPersons(initialPersons));
   }, []);
+
+  const showStatusMessage = (message, isError) => {
+    setStatusMessage({ message, isError });
+    setTimeout(() => {
+      setStatusMessage({ message: null, isError: false });
+    }, 3000);
+  };
 
   const handleAddition = (event) => {
     event.preventDefault();
@@ -25,15 +36,22 @@ const App = () => {
         const changedPerson = {...persons.find((p) => p.name === inputs.newName), number: inputs.newNumber};
         personService
         .update(changedPerson.id, changedPerson)
-        .then(returnedPerson => setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson)));
+        .then(returnedPerson => {
+          setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson));
+          showStatusMessage(`Updated ${returnedPerson.name}'s number to ${returnedPerson.number}`, false);
+        }).catch(error => {
+          showStatusMessage(`${changedPerson.name} has already been removed from the phonebook`, true)
+          setPersons(persons.filter((n) => n.id !== changedPerson.id))
+        });
       }
     };
 
     const addPerson = () => {
       const personObject = { name: inputs.newName, number: inputs.newNumber };
-      personService
-        .create(personObject)
-        .then((returnedPerson) => setPersons(persons.concat(returnedPerson)));
+      personService.create(personObject).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        showStatusMessage(`Added ${returnedPerson.name}`, false);
+      });
     };
 
     persons.some((p) => p.name === inputs.newName)
@@ -56,15 +74,27 @@ const App = () => {
     if (confirm(`Do you want to remove ${name} from the phonebook?`)) {
       personService
         .remove(id)
-        .then((removedPerson) =>
-          setPersons(persons.filter((p) => p.id !== removedPerson.id))
-        );
+        .then((removedPerson) => {
+          setPersons(persons.filter((p) => p.id !== removedPerson.id));
+          showStatusMessage(`Removed ${removedPerson.name}`, false);
+        })
+        .catch((error) => {
+          showStatusMessage(
+            `${name} has already been removed from the phonebook`,
+            true
+          );
+          setPersons(persons.filter((n) => n.id !== id));
+        });
     }
   };
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification
+        message={statusMessage.message}
+        isError={statusMessage.isError}
+      />
       <FilterField
         newFilter={inputs.newFilter}
         handleInputField={handleInputField}
