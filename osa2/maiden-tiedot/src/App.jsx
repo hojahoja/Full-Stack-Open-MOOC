@@ -3,6 +3,7 @@ import Field from "./components/Field";
 import CountryList from "./components/CountryList";
 import countriesService from "./services/countriesService";
 import Country from "./components/Country";
+import Weather from "./components/Weather";
 
 function App() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,6 +28,7 @@ function App() {
   const filteredCountries = countries.filter((c) =>
     c.name.common.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   return (
     <div>
       <Field handleFieldChange={handleFieldChange} />
@@ -42,6 +44,13 @@ function App() {
       </div>
       <Country
         country={filteredCountries.length === 1 ? filteredCountries[0] : null}
+      />
+      <Weather
+        area={
+          filteredCountries.length === 1
+            ? filteredCountries[0].capitalInfo.latlng
+            : null
+        }
       />
     </div>
   );

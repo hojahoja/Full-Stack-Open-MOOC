@@ -13,7 +13,7 @@ const Country = ({ country }) => {
       </p>
       <h3>languages: </h3>
       <ul>{languages}</ul>
-      <img src={country.flags.png} alt="countryFlag" />
+      <img src={country.flags.png} alt={country.flags.alt} />
     </div>
   );
 };
