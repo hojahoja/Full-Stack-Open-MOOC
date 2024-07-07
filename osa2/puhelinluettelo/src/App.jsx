@@ -54,9 +54,7 @@ const App = () => {
       });
     };
 
-    persons.some((p) => p.name === inputs.newName)
-      ? updateNumber()
-      : addPerson();
+    persons.some((p) => p.name === inputs.newName) ? updateNumber() : addPerson();
     setInputs((i) => ({ ...i, newName: "", newNumber: "" }));
   };
 
@@ -75,14 +73,11 @@ const App = () => {
       personService
         .remove(id)
         .then((removedPerson) => {
-          setPersons(persons.filter((p) => p.id !== removedPerson.id));
-          showStatusMessage(`Removed ${removedPerson.name}`, false);
+          setPersons(persons.filter((p) => p.id !== id));
+          showStatusMessage(`Removed ${name}`, false);
         })
         .catch((error) => {
-          showStatusMessage(
-            `${name} has already been removed from the phonebook`,
-            true
-          );
+          showStatusMessage(`${name} has already been removed from the phonebook`, true);
           setPersons(persons.filter((n) => n.id !== id));
         });
     }
@@ -91,14 +86,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification
-        message={statusMessage.message}
-        isError={statusMessage.isError}
-      />
-      <FilterField
-        newFilter={inputs.newFilter}
-        handleInputField={handleInputField}
-      />
+      <Notification message={statusMessage.message} isError={statusMessage.isError} />
+      <FilterField newFilter={inputs.newFilter} handleInputField={handleInputField} />
       <h2>add a new</h2>
       <AddPerson
         persons={persons}
