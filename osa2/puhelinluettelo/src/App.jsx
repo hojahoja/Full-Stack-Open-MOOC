@@ -98,18 +98,18 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <div>
-        {persons.reduce((arr, p) => {
+        {persons.reduce((array, p) => {
           return p.name.toLowerCase().includes(inputs.newFilter.toLowerCase())
             ? [
-                ...arr,
+                ...array,
                 <Person
-                  key={p.name}
+                  key={p.id}
                   name={p.name}
                   number={p.number}
                   handleDeletion={(e) => handleDeletion(e, p.id, p.name)}
                 />,
               ]
-            : arr;
+            : array;
         }, [])}
       </div>
     </div>
