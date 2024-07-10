@@ -48,10 +48,13 @@ const App = () => {
 
     const addPerson = () => {
       const personObject = { name: inputs.newName, number: inputs.newNumber };
-      personService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        showStatusMessage(`Added ${returnedPerson.name}`, false);
-      });
+      personService
+        .create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          showStatusMessage(`Added ${returnedPerson.name}`, false);
+        })
+        .catch((error) => showStatusMessage(error.response.data.error, true));
     };
 
     persons.some((p) => p.name === inputs.newName) ? updateNumber() : addPerson();
