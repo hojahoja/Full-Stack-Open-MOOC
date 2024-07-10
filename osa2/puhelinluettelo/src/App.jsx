@@ -24,7 +24,7 @@ const App = () => {
     setStatusMessage({ message, isError });
     setTimeout(() => {
       setStatusMessage({ message: null, isError: false });
-    }, 3000);
+    }, 5000);
   };
 
   const handleAddition = (event) => {
@@ -40,8 +40,14 @@ const App = () => {
           setPersons(persons.map(p => p.id !== returnedPerson.id ? p : returnedPerson));
           showStatusMessage(`Updated ${returnedPerson.name}'s number to ${returnedPerson.number}`, false);
         }).catch(error => {
-          showStatusMessage(`${changedPerson.name} has already been removed from the phonebook`, true)
-          setPersons(persons.filter((n) => n.id !== changedPerson.id))
+          
+          if (error.name === "TypeError") {
+            showStatusMessage(`${changedPerson.name} has already been removed from the phonebook`, true)
+            setPersons(persons.filter((n) => n.id !== changedPerson.id))
+          } else {
+            const message = error.response.data.error;
+            showStatusMessage(message ? message : error.message, true);
+          }
         });
       }
     };
@@ -54,7 +60,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson));
           showStatusMessage(`Added ${returnedPerson.name}`, false);
         })
-        .catch((error) => showStatusMessage(error.response.data.error, true));
+        .catch((error) => {
+          const message = error.response.data.error;
+          showStatusMessage(message ? message : error.message, true);
+        });
     };
 
     persons.some((p) => p.name === inputs.newName) ? updateNumber() : addPerson();
