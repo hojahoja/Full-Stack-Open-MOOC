@@ -1,0 +1,32 @@
+@hostname = localhost
+@port = 3003
+@host = {{hostname}}:{{port}}
+@resource = api/blogs
+@id = placeholder
+GET http://{{host}}/{{resource}}/
+####
+#GET http://{{host}}/{{resource}}/{{id}}
+####
+#GET http://{{host}}/api/info
+####
+#DELETE http://{{host}}/{{resource}}/{{id}}
+####
+#POST http://{{host}}/{{resource}}/
+####
+POST http://{{host}}/{{resource}}/
+Content-Type: application/json
+
+{
+  "title": "Some Blog",
+  "author": "Some Writer",
+  "url": "http://someblogsite.com/",
+  "likes": "0"
+}
+####
+#PUT http://{{host}}/{{resource}}/{{id}}/
+#Content-Type: application/json
+#
+#{
+#  "name": "Setä Samuli",
+#  "number": "7-4-1776"
+#}
