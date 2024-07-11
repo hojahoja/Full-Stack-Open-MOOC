@@ -4,7 +4,7 @@ const mostLikes = (blogs) => {
     title: null,
     likes: 0,
   });
-  return mostLiked.title ? mostLiked : undefined;
+  return mostLiked.title ? mostLiked : null;
 };
 
 module.exports = { totalLikes, mostLikes };

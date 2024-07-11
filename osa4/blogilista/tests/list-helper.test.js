@@ -86,7 +86,7 @@ describe("Most likes", () => {
   test("function returns a real blog in a list with zero likes", () =>
     assert.strictEqual(listHelper.mostLikes(listWithNoLikes), listWithNoLikes[1]));
 
-  test("of empty list is undefined", () => assert.strictEqual(listHelper.mostLikes([]), undefined));
+  test("of empty list is null", () => assert.strictEqual(listHelper.mostLikes([]), null));
 
   test("when list has only one blog equals the likes of that", () => {
     const result = listHelper.mostLikes(listWithOneBlog);
