@@ -82,19 +82,61 @@ const listWithNoLikes = [
   },
 ];
 
-describe("Most likes", () => {
-  test("function returns a real blog in a list with zero likes", () =>
-    assert.strictEqual(listHelper.mostLikes(listWithNoLikes), listWithNoLikes[1]));
+describe("mostLikes", () => {
+  test("returns null when given an empty list", () => {
+    assert.strictEqual(listHelper.mostLikes([]), null);
+  });
 
-  test("of empty list is null", () => assert.strictEqual(listHelper.mostLikes([]), null));
+  test("returns a real author object when the author has no likes", () => {
+    const result = JSON.stringify(listHelper.mostLikes(listWithNoLikes));
+    const expect = JSON.stringify({ author: "Robert C. Martin", likes: 0 });
+    assert.strictEqual(result, expect);
+  });
 
-  test("when list has only one blog equals the likes of that", () => {
-    const result = listHelper.mostLikes(listWithOneBlog);
+  test("returns the author from a list with one entry", () => {
+    const result = JSON.stringify(listHelper.mostLikes(listWithOneBlog));
+    const expect = JSON.stringify({ author: "Edsger W. Dijkstra", likes: 5 });
+    assert.strictEqual(result, expect);
+  });
+
+  test("returns the correct author from a bigger list", () => {
+    const result = JSON.stringify(listHelper.mostLikes(multipleBlogs));
+    const expect = JSON.stringify({ author: "Edsger W. Dijkstra", likes: 17 });
+    assert.strictEqual(result, expect);
+  });
+});
+
+describe("mostBlogs", () => {
+  test("returns null when given an empty list", () => {
+    assert.strictEqual(listHelper.mostBlogs([]), null);
+  });
+
+  test("returns the author from a list with one entry", () => {
+    const result = JSON.stringify(listHelper.mostBlogs(listWithOneBlog));
+    const expect = JSON.stringify({ author: "Edsger W. Dijkstra", blogs: 1 });
+    assert.strictEqual(result, expect);
+  });
+
+  test("returns the correct author from a bigger list", () => {
+    const result = JSON.stringify(listHelper.mostBlogs(multipleBlogs));
+    const expect = JSON.stringify({ author: "Robert C. Martin", blogs: 3 });
+    assert.strictEqual(result, expect);
+  });
+});
+
+describe("favoriteBlog", () => {
+  test("returns a real blog in a list with zero likes", () =>
+    assert.strictEqual(listHelper.favoriteBlog(listWithNoLikes), listWithNoLikes[1]));
+
+  test("of an empty list is null", () => assert.strictEqual(listHelper.favoriteBlog([]), null));
+
+  test("returns the blog from a list with one entry", () => {
+    const result = listHelper.favoriteBlog(listWithOneBlog);
     assert.strictEqual(result, listWithOneBlog[0]);
   });
 
-  test("function returns the correct blog in a bigger list", () => {
-    const result = listHelper.mostLikes(multipleBlogs);
+  test("returns the correct blog in a bigger list", () => {
+    const result = listHelper.favoriteBlog(multipleBlogs);
     assert.strictEqual(result, multipleBlogs[2]);
   });
 });
