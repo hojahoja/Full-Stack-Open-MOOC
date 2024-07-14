@@ -38,6 +38,29 @@ describe("when bloglist api already has some blogs", () => {
       assert.deepStrictEqual(resultBlog.body, expectedBlog);
     });
   });
+  describe("addition of a new blog", () => {
+    test("succeeds with valid data", async () => {
+      const someBlog = {
+        title: "The universe is a simulation written in Lisp",
+        author: "Raving Lunatic",
+        url: "http://Programmersrevelationisnow.gg/",
+        likes: 777,
+      };
+
+      await api
+        .post("/api/blogs")
+        .send(someBlog)
+        .expect(201)
+        .expect("Content-Type", /application\/json/);
+
+      const blogsAtEnd = await helper.blogsInDb();
+
+      assert.strictEqual(blogsAtEnd.length, multipleBlogs.length + 1);
+
+      const resultTitle = blogsAtEnd[blogsAtEnd.length - 1].title;
+      assert.strictEqual(resultTitle, someBlog.title);
+    });
+  });
 });
 
 after(async () => {
