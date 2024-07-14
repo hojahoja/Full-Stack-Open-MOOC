@@ -1,7 +1,7 @@
 const { test, describe } = require("node:test");
 const assert = require("node:assert");
 const listHelper = require("../utils/list-helper");
-const testHelper = require("./test_helper");
+const testHelper = require("./testing-helper");
 
 const listWithOneBlog = testHelper.listWithOneBlog;
 const multipleBlogs = testHelper.multipleBlogs;
