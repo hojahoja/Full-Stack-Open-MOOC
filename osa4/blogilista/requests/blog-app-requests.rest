@@ -13,6 +13,13 @@ GET http://{{host}}/{{resource}}/
 ####
 POST http://{{host}}/{{resource}}/
 Content-Type: application/json
+
+{
+  "title": "Some Blog",
+  "author": "Some Writer",
+  "url": "http://someblogsite.com/",
+  "likes": "0"
+}
 ####
 #PUT http://{{host}}/{{resource}}/{{id}}/
 #Content-Type: application/json

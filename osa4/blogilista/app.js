@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+require("express-async-errors");
 //const cors = require("cors");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
@@ -12,11 +13,14 @@ mongoose
   .then(() => logger.info("Connected to MongoDB"))
   .catch((error) => logger.error("Error connecting to MongoDB:", error.message));
 
-morgan.token("body", (req) => (req.method === "POST" ? JSON.stringify(req.body) : undefined));
-
 //app.use(cors());
 app.use(express.json());
-app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
+
+if (process.env.NODE_ENV !== "test") {
+  morgan.token("body", (req) => (req.method === "POST" ? JSON.stringify(req.body) : undefined));
+  app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
+}
+
 app.use("/api/blogs", blogsRouter);
 
 module.exports = app;

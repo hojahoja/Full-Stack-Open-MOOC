@@ -1,12 +1,12 @@
 {
   "name": "blogilista",
-  "version": "4.7.5",
+  "version": "4.8.1",
   "description": "exercise ",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "node --test",
-    "dev": "nodemon index.js",
+    "start": "NODE_ENV=production node index.js",
+    "test": "NODE_ENV=test node --test",
+    "dev": "NODE_ENV=development nodemon index.js",
     "lint": "eslint ."
   },
   "repository": {
@@ -30,7 +30,9 @@
   },
   "dependencies": {
     "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
     "mongoose": "^8.5.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "supertest": "^7.0.0"
   }
 }
