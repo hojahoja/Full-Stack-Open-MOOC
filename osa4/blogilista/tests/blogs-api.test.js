@@ -5,13 +5,13 @@ const mongoose = require("mongoose");
 const Blog = require("../models/blog");
 const app = require("../app");
 const helper = require("./testing-helper");
-const { multipleBlogs } = require("./testing-helper");
+const { multipleBlogs: initialBlogs } = require("./testing-helper");
 const api = supertest(app);
 
 describe("when bloglist api already has some blogs", () => {
   beforeEach(async () => {
     await Blog.deleteMany({});
-    await Blog.insertMany(multipleBlogs);
+    await Blog.insertMany(initialBlogs);
   });
 
   test("returns the blogs in a JSON format", async () => {
@@ -23,7 +23,7 @@ describe("when bloglist api already has some blogs", () => {
 
   test("returns the correct amount of blogs", async () => {
     const response = await api.get("/api/blogs");
-    assert.strictEqual(response.body.length, multipleBlogs.length);
+    assert.strictEqual(response.body.length, initialBlogs.length);
   });
   describe("viewing a specific blog", () => {
     test("succeeds with a valid id", async () => {
@@ -49,7 +49,7 @@ describe("when bloglist api already has some blogs", () => {
 
     const assertCorrectBlogValues = async (expectedTitle, expectedLikes) => {
       const blogsAtEnd = await helper.blogsInDb();
-      assert.strictEqual(blogsAtEnd.length, multipleBlogs.length + 1);
+      assert.strictEqual(blogsAtEnd.length, initialBlogs.length + 1);
 
       const resultBlog = blogsAtEnd[blogsAtEnd.length - 1];
       assert.strictEqual(resultBlog.title, expectedTitle);
@@ -77,6 +77,24 @@ describe("when bloglist api already has some blogs", () => {
 
       await postBlog(someBlog, 201);
       await assertCorrectBlogValues("Why Holy C is heretical", 0);
+    });
+
+    test("with no URL returns 400 bad request", async () => {
+      const someBlog = {
+        title: "Temple OS will lead you astray",
+        author: "Raving Lunatic",
+        likes: 0,
+      };
+      await postBlog(someBlog, 400);
+    });
+    test("with no title returns 400 bad request", async () => {
+      const someBlog = {
+        author: "Raving Lunatic",
+        likes: 0,
+        url: "http://Programmersrevelationisnow.gg/",
+      };
+
+      await postBlog(someBlog, 400);
     });
   });
 });

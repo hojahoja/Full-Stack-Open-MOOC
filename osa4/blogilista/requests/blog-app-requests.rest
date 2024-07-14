@@ -9,7 +9,7 @@ GET http://{{host}}/{{resource}}/
 ####
 #DELETE http://{{host}}/{{resource}}/{{id}}
 ####
-#POST http://{{host}}/{{resource}}/
+POST http://{{host}}/{{resource}}/
 ####
 POST http://{{host}}/{{resource}}/
 Content-Type: application/json
