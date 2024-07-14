@@ -39,6 +39,23 @@ describe("when bloglist api already has some blogs", () => {
     });
   });
   describe("addition of a new blog", () => {
+    const postBlog = async (blog, expectedStatusCode) => {
+      await api
+        .post("/api/blogs")
+        .send(blog)
+        .expect(expectedStatusCode)
+        .expect("Content-Type", /application\/json/);
+    };
+
+    const assertCorrectBlogValues = async (expectedTitle, expectedLikes) => {
+      const blogsAtEnd = await helper.blogsInDb();
+      assert.strictEqual(blogsAtEnd.length, multipleBlogs.length + 1);
+
+      const resultBlog = blogsAtEnd[blogsAtEnd.length - 1];
+      assert.strictEqual(resultBlog.title, expectedTitle);
+      assert.strictEqual(resultBlog.likes, expectedLikes);
+    };
+
     test("succeeds with valid data", async () => {
       const someBlog = {
         title: "The universe is a simulation written in Lisp",
@@ -47,18 +64,19 @@ describe("when bloglist api already has some blogs", () => {
         likes: 777,
       };
 
-      await api
-        .post("/api/blogs")
-        .send(someBlog)
-        .expect(201)
-        .expect("Content-Type", /application\/json/);
+      await postBlog(someBlog, 201);
+      await assertCorrectBlogValues("The universe is a simulation written in Lisp", 777);
+    });
 
-      const blogsAtEnd = await helper.blogsInDb();
+    test("succeeds with no likes field in data", async () => {
+      const someBlog = {
+        title: "Why Holy C is heretical",
+        author: "Raving Lunatic",
+        url: "http://Programmersrevelationisnow.gg/",
+      };
 
-      assert.strictEqual(blogsAtEnd.length, multipleBlogs.length + 1);
-
-      const resultTitle = blogsAtEnd[blogsAtEnd.length - 1].title;
-      assert.strictEqual(resultTitle, someBlog.title);
+      await postBlog(someBlog, 201);
+      await assertCorrectBlogValues("Why Holy C is heretical", 0);
     });
   });
 });
