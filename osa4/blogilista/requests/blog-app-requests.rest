@@ -2,12 +2,12 @@
 @port = 3003
 @host = {{hostname}}:{{port}}
 @resource = api/blogs
-@id = placeholder
+@id = 669372ee42d28ca379809a40
 GET http://{{host}}/{{resource}}/
 ####
-#GET http://{{host}}/{{resource}}/{{id}}
+GET http://{{host}}/{{resource}}/{{id}}
 ####
-#DELETE http://{{host}}/{{resource}}/{{id}}
+DELETE http://{{host}}/{{resource}}/{{id}}
 ####
 POST http://{{host}}/{{resource}}/
 ####
@@ -15,18 +15,20 @@ POST http://{{host}}/{{resource}}/
 Content-Type: application/json
 
 {
-  "title": "Some Blog",
-  "author": "Some Writer",
-  "url": "http://someblogsite.com/",
-  "likes": "0"
+    "_id": "{{id}}",
+    "title": "Some Blog",
+    "author": "Some Writer",
+    "url": "http://someblogsite.com/",
+    "likes": 0,
+    "__v": 0
 }
 ####
-#PUT http://{{host}}/{{resource}}/{{id}}/
-#Content-Type: application/json
-#
-#{
-#  "title": "Some Other Blog",
-#  "author": "Some Other Writer",
-#  "url": "http://someotherblogsite.com/",
-#  "likes": "1"
-#}
+PUT http://{{host}}/{{resource}}/{{id}}/
+Content-Type: application/json
+
+{
+  "title": "Some Other Blog",
+  "author": "Some Other Writer",
+  "url": "http://someotherblogsite.com/",
+  "likes": 0
+}
