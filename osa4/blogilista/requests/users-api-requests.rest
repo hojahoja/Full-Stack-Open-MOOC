@@ -1,0 +1,26 @@
+@hostname = localhost
+@port = 3003
+@host = {{hostname}}:{{port}}
+@resource = api/users
+@id = placeholder
+GET http://{{host}}/{{resource}}/
+####
+#GET http://{{host}}/{{resource}}/{{id}}
+###
+#Temproary option to make testing esier for now
+DELETE http://{{host}}/{{resource}}/
+#DELETE http://{{host}}/{{resource}}/{{id}}
+#####
+#POST http://{{host}}/{{resource}}/
+###
+POST http://{{host}}/{{resource}}/
+Content-Type: application/json
+
+{
+  "username": "nobody",
+  "name": "John Doe",
+  "password": "i-have-no-name"
+}
+#####
+#PUT http://{{host}}/{{resource}}/{{id}}/
+#Content-Type: application/json
