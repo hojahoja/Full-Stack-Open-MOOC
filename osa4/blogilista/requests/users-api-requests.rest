@@ -2,7 +2,8 @@
 @port = 3003
 @host = {{hostname}}:{{port}}
 @resource = api/users
-@id = placeholder
+@blogId = 669372ee42d28ca379809a40
+@userId = 66961ee8cc7f4ff4f3eb3dd2
 GET http://{{host}}/{{resource}}/
 ####
 #GET http://{{host}}/{{resource}}/{{id}}
@@ -17,9 +18,13 @@ POST http://{{host}}/{{resource}}/
 Content-Type: application/json
 
 {
+  "_id": "{{userId}}",
   "username": "nobody",
   "name": "John Doe",
-  "password": "i-have-no-name"
+  "password": "i-have-no-name",
+  "notes": "{{blogId}}",
+  "__v": 0
+  
 }
 #####
 #PUT http://{{host}}/{{resource}}/{{id}}/

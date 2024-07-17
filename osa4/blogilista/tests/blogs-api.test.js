@@ -1,14 +1,25 @@
-const { test, describe, beforeEach, after } = require("node:test");
+const { test, describe, before, beforeEach, after } = require("node:test");
 const assert = require("node:assert");
 const supertest = require("supertest");
 const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const Blog = require("../models/blog");
+const User = require("../models/user");
 const app = require("../app");
 const helper = require("./testing-helper");
 const { multipleBlogs: initialBlogs } = require("./testing-helper");
 const api = supertest(app);
 
 describe("when bloglist api already has some blogs", () => {
+  before(async () => {
+    await User.deleteMany({});
+
+    const passwordHash = await bcrypt.hash("safePasswordTrustMe", 10);
+    const user = new User({ username: "GOD", passwordHash });
+
+    await user.save();
+  });
+
   beforeEach(async () => {
     await Blog.deleteMany({});
     await Blog.insertMany(initialBlogs);

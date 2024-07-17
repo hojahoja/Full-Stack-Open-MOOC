@@ -3,6 +3,8 @@
 @host = {{hostname}}:{{port}}
 @resource = api/blogs
 @id = 669372ee42d28ca379809a40
+@userId = 66961ee8cc7f4ff4f3eb3dd2
+
 GET http://{{host}}/{{resource}}/
 ####
 GET http://{{host}}/{{resource}}/{{id}}
@@ -20,6 +22,7 @@ Content-Type: application/json
     "author": "Some Writer",
     "url": "http://someblogsite.com/",
     "likes": 0,
+    "user": "{{userId}}",
     "__v": 0
 }
 ####
@@ -30,5 +33,6 @@ Content-Type: application/json
   "title": "Some Other Blog",
   "author": "Some Other Writer",
   "url": "http://someotherblogsite.com/",
+  "user": "Doesn't matter what is put here",
   "likes": 0
 }

@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const { test, beforeEach, describe, after } = require("node:test");
@@ -10,8 +9,8 @@ const api = supertest(app);
 
 describe("When the db already has one user", () => {
   beforeEach(async () => {
-    const passwordHash = await bcrypt.hash("Lisp", 10);
-    const user = new User({ username: "GOD", passwordHash });
+    const passwordHash = "pretendThisPasswordIsHashed";
+    const user = new User({ username: "MOG", passwordHash });
 
     await User.deleteMany({});
     await user.save();
@@ -48,7 +47,7 @@ describe("When the db already has one user", () => {
     const userAddFailTestCases = [
       {
         testName: "existing username",
-        username: "GOD",
+        username: "MOG",
         password: "Lisp",
         expectedError: "username has to be unique",
       },

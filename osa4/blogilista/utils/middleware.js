@@ -13,7 +13,8 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: "malformatted id" });
   } else if (
     error.name === "MongoServerError" &&
-    error.message.includes("E11000 duplicate key error")
+    (error.message.includes("E11000 duplicate key error collection: BlogApp.users") ||
+      error.message.includes("E11000 duplicate key error collection: TestBlogApp.users"))
   ) {
     return response.status(400).json({ error: "username has to be unique" });
   }
