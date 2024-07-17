@@ -2,15 +2,15 @@
 @port = 3003
 @host = {{hostname}}:{{port}}
 @resource = api/blogs
-@id = 669372ee42d28ca379809a40
+@id = 6697feae1f95ccea97bae525
 @userId = 66961ee8cc7f4ff4f3eb3dd2
 @token = placeholder
-
 GET http://{{host}}/{{resource}}/
 ####
 GET http://{{host}}/{{resource}}/{{id}}
 ####
 DELETE http://{{host}}/{{resource}}/{{id}}
+Authorization: Bearer {{token}}
 ####
 POST http://{{host}}/{{resource}}/
 ####
@@ -19,14 +19,15 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "_id": "{{id}}",
     "title": "Some Blog",
     "author": "Some Writer",
     "url": "http://someblogsite.com/",
-    "likes": 0,
-    "user": "{{userId}}",
-    "__v": 0
+    "likes": 0
 }
+
+#"user": "{{userId}}",
+#"_id": "{{id}}",
+#"__v": 0
 ####
 PUT http://{{host}}/{{resource}}/{{id}}/
 Content-Type: application/json
