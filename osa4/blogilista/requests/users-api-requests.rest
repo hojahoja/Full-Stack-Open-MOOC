@@ -29,3 +29,14 @@ Content-Type: application/json
 #####
 #PUT http://{{host}}/{{resource}}/{{id}}/
 #Content-Type: application/json
+# LOGIN TESTS
+###
+POST http://{{host}}/api/login/
+Content-Type: application/json
+
+{"username": "nobody", "password": "i-have-no-name"}
+###
+POST http://{{host}}/api/login/
+Content-Type: application/json
+
+{"username": "nobod", "password": "It's a me Mario!"}
