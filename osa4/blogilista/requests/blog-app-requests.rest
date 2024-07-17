@@ -4,6 +4,7 @@
 @resource = api/blogs
 @id = 669372ee42d28ca379809a40
 @userId = 66961ee8cc7f4ff4f3eb3dd2
+@token = placeholder
 
 GET http://{{host}}/{{resource}}/
 ####
@@ -15,6 +16,7 @@ POST http://{{host}}/{{resource}}/
 ####
 POST http://{{host}}/{{resource}}/
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
     "_id": "{{id}}",

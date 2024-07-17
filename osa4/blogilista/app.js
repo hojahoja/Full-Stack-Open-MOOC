@@ -19,13 +19,14 @@ mongoose
 //app.use(cors());
 app.use(express.json());
 
-if (process.env.NODE_ENV === "dev") {
+if (process.env.NODE_ENV === "development") {
   morgan.token("body", (req) => (req.method === "POST" ? JSON.stringify(req.body) : undefined));
   app.use(morgan(":method :url :status :res[content-length] - :response-time ms :body"));
 } else if (process.env.NODE_ENV !== "test") {
   app.use(morgan(":method :url :status :res[content-length] - :response-time ms"));
 }
 
+app.use(middleware.tokenExtractor);
 app.use("/api/blogs", blogsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);

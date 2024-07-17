@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
 const User = require("../models/user");
@@ -13,13 +14,19 @@ blogsRouter.get("/:id", async (req, res) => {
 });
 
 blogsRouter.post("/", async (req, res) => {
-  const user = await User.findOne();
-  const blog = new Blog({ ...req.body, user: user.id });
-  const result = await blog.save();
+  const token = jwt.verify(req.token, process.env.SECRET);
+  if (!token.id) {
+    return res.status(401).json({ error: "invalid token" });
+  }
 
-  user.blogs = user.blogs.concat(result.id);
+  const user = await User.findById(token.id);
+
+  const blog = new Blog({ ...req.body, user: user.id });
+  const savedBlog = await blog.save();
+
+  user.blogs = user.blogs.concat(savedBlog.id);
   await user.save();
-  res.status(201).json(result);
+  res.status(201).json(savedBlog);
 });
 
 blogsRouter.delete("/:id", async (req, res) => {
