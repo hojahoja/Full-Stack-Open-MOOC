@@ -21,13 +21,11 @@ Content-Type: application/json
   "username": "nobody",
   "name": "John Doe",
   "password": "i-have-no-name"
-  
 }
-
-#  "__v": 0
+###  "__v": 0
 #  "_id": "{{userId}}",
 #  "notes": "{{blogId}}",
-#####
+###
 #PUT http://{{host}}/{{resource}}/{{id}}/
 #Content-Type: application/json
 # LOGIN TESTS

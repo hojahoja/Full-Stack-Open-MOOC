@@ -20,9 +20,9 @@ usersRouter.post("/", async (req, res) => {
 });
 
 //Temporary testing method
-usersRouter.delete("/", async (req, res) => {
-  await User.deleteMany({});
-  res.status(418).end();
-});
+//usersRouter.delete("/", async (req, res) => {
+//  await User.deleteMany({});
+//  res.status(418).end();
+//});
 
 module.exports = usersRouter;

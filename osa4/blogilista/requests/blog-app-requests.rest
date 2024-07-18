@@ -2,7 +2,7 @@
 @port = 3003
 @host = {{hostname}}:{{port}}
 @resource = api/blogs
-@id = 6697feae1f95ccea97bae525
+@id = 6698e23794c223a5c772d896
 @userId = 66961ee8cc7f4ff4f3eb3dd2
 @token = placeholder
 GET http://{{host}}/{{resource}}/
