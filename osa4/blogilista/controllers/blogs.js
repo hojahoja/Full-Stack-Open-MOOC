@@ -31,10 +31,8 @@ blogsRouter.delete("/:id", userExtractor, async (req, res) => {
     await Blog.findByIdAndDelete(blogToDelete);
     user.blogs = user.blogs.filter((blog) => blog.toString() !== blogToDelete);
     await user.save();
-    res.status(204).end();
-  } else {
-    return res.status(401).json({ error: `${user.username} doesn't have this entry` });
   }
+  res.status(204).end();
 });
 
 blogsRouter.put("/:id", async (req, res) => {
