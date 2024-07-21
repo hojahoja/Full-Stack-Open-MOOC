@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -9,6 +10,10 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [newBlog, setNewBlog] = useState({ title: "", author: "", url: "" });
+  const [statusMessage, setStatusMessage] = useState({
+    message: null,
+    isError: false,
+  });
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -24,6 +29,13 @@ const App = () => {
     }
   }, []);
 
+  const showStatusMessage = (message, isError) => {
+    setStatusMessage({ message, isError });
+    setTimeout(() => {
+      setStatusMessage({ message: null, isError: false });
+    }, 5000);
+  };
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -35,7 +47,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      console.error(exception.message);
+      showStatusMessage(exception.response.data.error, true);
     }
   };
 
@@ -53,14 +65,16 @@ const App = () => {
       const returnedBlog = await blogService.create(newBlog);
       setNewBlog({ title: "", author: "", url: "" });
       setBlogs(blogs.concat(returnedBlog));
+      showStatusMessage(`Added a new blog ${returnedBlog.title}`);
     } catch (exception) {
-      console.error(exception.message);
+      showStatusMessage(exception.response.data.error, true);
     }
   };
 
   const loginForm = () => (
     <>
       <h2>log in to application</h2>
+      <Notification message={statusMessage.message} isError={statusMessage.isError} />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -124,6 +138,7 @@ const App = () => {
     return (
       <>
         <h2>blogs</h2>
+        <Notification message={statusMessage.message} isError={statusMessage.isError} />
         <p>
           {user.name} logged in <button onClick={handleLogout}>logout</button>
         </p>
