@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateBlog }) => {
   const [fullyVisible, setFullyVisible] = useState(false);
   const { url, likes, author, title } = blog;
   const blogStyle = {
@@ -13,12 +13,18 @@ const Blog = ({ blog }) => {
 
   const toggleVisibility = () => setFullyVisible(!fullyVisible);
 
+  const incrementLikesByOne = async (event) => {
+    event.preventDefault();
+
+    await updateBlog(blog);
+  };
+
   const additionalInfo = () => {
     return (
       <>
         {url}
         <div>
-          likes {likes} <button>like</button>
+          likes {likes} <button onClick={incrementLikesByOne}>like</button>
         </div>
         {author}
       </>

@@ -68,7 +68,24 @@ const App = () => {
       setBlogs(blogs.concat(returnedBlog));
       showStatusMessage(`Added a new blog ${returnedBlog.title}`);
     } catch (exception) {
+      const errorMessage = exception.response.data.error;
+      showStatusMessage(errorMessage, true);
+      if (errorMessage === "Session has expired") {
+        setUser(null);
+        window.localStorage.removeItem("loggedBlogConnoisseur");
+      }
+    }
+  };
+
+  const handleUpdateBlog = async (blog) => {
+    try {
+      blog.likes += 1;
+      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : blog)));
+      await blogService.update(blog.id);
+    } catch (exception) {
       showStatusMessage(exception.response.data.error, true);
+      blog.likes -= 1;
+      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : blog)));
     }
   };
 
@@ -121,7 +138,7 @@ const App = () => {
         <div>{blogForm()}</div>
         <div>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} />
+            <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlog} />
           ))}
         </div>
       </>
