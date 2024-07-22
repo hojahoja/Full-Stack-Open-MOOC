@@ -111,16 +111,19 @@ const App = () => {
   const blogList = () => {
     return (
       <>
-        <h2>blogs</h2>
-        <Notification message={statusMessage.message} isError={statusMessage.isError} />
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
-        <br />
+        <div>
+          <h2>blogs</h2>
+          <Notification message={statusMessage.message} isError={statusMessage.isError} />
+          <p>
+            {user.name} logged in <button onClick={handleLogout}>logout</button>
+          </p>
+        </div>
         <div>{blogForm()}</div>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
+        <div>
+          {blogs.map((blog) => (
+            <Blog key={blog.id} blog={blog} />
+          ))}
+        </div>
       </>
     );
   };
