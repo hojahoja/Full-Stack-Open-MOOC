@@ -17,7 +17,10 @@ const App = () => {
   });
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService.getAll().then((blogs) => {
+      blogs.sort((b1, b2) => b2.likes - b1.likes);
+      setBlogs(blogs);
+    });
   }, []);
 
   useEffect(() => {
@@ -78,14 +81,19 @@ const App = () => {
   };
 
   const handleUpdateBlog = async (blog) => {
+    const incrementLikeAndUpdateBloglist = (increment) => {
+      blog.likes += increment;
+      setBlogs(
+        blogs.map((b) => (b.id !== blog.id ? b : blog)).sort((b1, b2) => b2.likes - b1.likes)
+      );
+    };
+
     try {
-      blog.likes += 1;
-      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : blog)));
+      incrementLikeAndUpdateBloglist(1);
       await blogService.update(blog.id);
     } catch (exception) {
       showStatusMessage(exception.response.data.error, true);
-      blog.likes -= 1;
-      setBlogs(blogs.map((b) => (b.id !== blog.id ? b : blog)));
+      incrementLikeAndUpdateBloglist(-1);
     }
   };
 
