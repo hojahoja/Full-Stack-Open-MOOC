@@ -59,12 +59,13 @@ const App = () => {
     event.preventDefault();
 
     setUser(null);
+    blogService.setToken(null);
     window.localStorage.removeItem("loggedBlogConnoisseur");
   };
 
   const blogFormRef = useRef();
 
-  const handleCreateBlog = async (newBlog) => {
+  const handleNewBlog = async (newBlog) => {
     try {
       blogFormRef.current.toggleVisibility();
       const returnedBlog = await blogService.create(newBlog);
@@ -75,25 +76,39 @@ const App = () => {
       showStatusMessage(errorMessage, true);
       if (errorMessage === "Session has expired") {
         setUser(null);
+        blogService.setToken(null);
         window.localStorage.removeItem("loggedBlogConnoisseur");
       }
     }
   };
 
-  const handleUpdateBlog = async (blog) => {
+  const handleUpdateBlog = async (blogToUpdate) => {
     const incrementLikeAndUpdateBloglist = (increment) => {
-      blog.likes += increment;
+      blogToUpdate.likes += increment;
       setBlogs(
-        blogs.map((b) => (b.id !== blog.id ? b : blog)).sort((b1, b2) => b2.likes - b1.likes)
+        blogs
+          .map((b) => (b.id !== blogToUpdate.id ? b : blogToUpdate))
+          .sort((b1, b2) => b2.likes - b1.likes)
       );
     };
 
     try {
       incrementLikeAndUpdateBloglist(1);
-      await blogService.update(blog.id);
+      await blogService.update(blogToUpdate.id);
     } catch (exception) {
       showStatusMessage(exception.response.data.error, true);
       incrementLikeAndUpdateBloglist(-1);
+    }
+  };
+
+  const handleRemoveBlog = async (blogToRemove) => {
+    try {
+      if (confirm(`Do you want to remove blog: ${blogToRemove.title}`)) {
+        await blogService.remove(blogToRemove.id);
+        setBlogs(blogs.filter((b) => b.id !== blogToRemove.id));
+      }
+    } catch (exception) {
+      showStatusMessage(exception.response.data.error, true);
     }
   };
 
@@ -128,7 +143,7 @@ const App = () => {
   const blogForm = () => {
     return (
       <Togglable buttonLabel={"New blog"} ref={blogFormRef}>
-        <BlogForm createBlog={handleCreateBlog} />
+        <BlogForm createBlog={handleNewBlog} />
       </Togglable>
     );
   };
@@ -146,7 +161,13 @@ const App = () => {
         <div>{blogForm()}</div>
         <div>
           {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} updateBlog={handleUpdateBlog} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateBlog={handleUpdateBlog}
+              removeBlog={handleRemoveBlog}
+              user={user}
+            />
           ))}
         </div>
       </>

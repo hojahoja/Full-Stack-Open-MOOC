@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, user, updateBlog, removeBlog }) => {
   const [fullyVisible, setFullyVisible] = useState(false);
   const { url, likes, author, title } = blog;
   const blogStyle = {
@@ -11,22 +11,20 @@ const Blog = ({ blog, updateBlog }) => {
     marginBottom: 5,
   };
 
-  const toggleVisibility = () => setFullyVisible(!fullyVisible);
-
-  const incrementLikesByOne = async (event) => {
-    event.preventDefault();
-
-    await updateBlog(blog);
+  const toggleVisibility = () => {
+    setFullyVisible(!fullyVisible);
   };
 
   const additionalInfo = () => {
+    const userOwnsBlog = blog.user.id === user.id || blog.user === user.id;
     return (
       <>
         {url}
         <div>
-          likes {likes} <button onClick={incrementLikesByOne}>like</button>
+          likes {likes} <button onClick={() => updateBlog(blog)}>like</button>
         </div>
         {author}
+        <div>{userOwnsBlog && <button onClick={() => removeBlog(blog)}>remove</button>}</div>
       </>
     );
   };
