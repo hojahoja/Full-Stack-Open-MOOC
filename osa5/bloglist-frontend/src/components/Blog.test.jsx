@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import Blog from "./Blog";
 import { beforeEach } from "vitest";
+import userEvent from "@testing-library/user-event";
 
 describe("<Blog />", () => {
   let container;
@@ -17,10 +18,16 @@ describe("<Blog />", () => {
 
   test("should always render blog title", () => {
     const element = screen.getByText("Test title!");
-    expect(element).toBeDefined();
   });
 
-  test("should render title, url, likes and author", async () => {
-    return "TBC";
+  test("should render title, url, likes and author after view button has been clicked", async () => {
+    const clicker = userEvent.setup();
+    const button = screen.getByText("view");
+    await clicker.click(button);
+
+    let element = screen.getByText("Test title!");
+    element = screen.getByText("testerMan", { exact: false });
+    element = screen.getByText("http://www.testerBester.com/", { exact: false });
+    element = screen.getByText("likes 1", { exact: false });
   });
 });

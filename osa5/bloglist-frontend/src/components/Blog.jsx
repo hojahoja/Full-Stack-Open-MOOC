@@ -17,7 +17,7 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
   };
 
   const additionalInfo = () => {
-    const userOwnsBlog = blog.user.id === user.id || blog.user === user.id;
+    const userOwnsBlog = user ? blog.user.id === user.id || blog.user === user.id : false;
     return (
       <>
         {url}
