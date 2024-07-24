@@ -12,8 +12,14 @@ module.exports = {
   parserOptions: { ecmaVersion: "latest", sourceType: "module" },
   settings: { react: { version: "18.2" } },
   plugins: ["react-refresh"],
+  //Prettier Extension already handles a lot of rules recommended
+  //in the course material and suggests turning them off from eslint.
   rules: {
-    "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
+    eqeqeq: "error",
+    "no-console": 0,
     "react/prop-types": 0,
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": 0,
+    "no-unused-vars": 0,
   },
 };

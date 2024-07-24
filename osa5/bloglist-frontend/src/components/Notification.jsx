@@ -1,4 +1,4 @@
-const Notification = ({ message, isError }) => {
+const Notification = ({ message, isError = false }) => {
   if (message === null) return null;
   const infoStyle = {
     color: "black",
