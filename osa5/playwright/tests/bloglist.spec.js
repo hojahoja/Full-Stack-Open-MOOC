@@ -3,8 +3,8 @@ const { blogListLogin, createBlog } = require("./helper");
 
 describe("Note app", () => {
   beforeEach(async ({ page, request }) => {
-    await request.post("http:localhost:3003/api/testing/reset");
-    await request.post("http://localhost:3003/api/users", {
+    await request.post("/api/testing/reset");
+    await request.post("/api/users", {
       data: {
         name: "John Doe",
         username: "nobody",
@@ -12,7 +12,7 @@ describe("Note app", () => {
       },
     });
 
-    await page.goto("http://localhost:5174");
+    await page.goto("/");
   });
 
   test("Login form is shown", async ({ page }) => {
@@ -74,6 +74,25 @@ describe("Note app", () => {
 
         await expect(blogToRemove).toHaveCount(0);
         await expect(blogToRemove).not.toBeVisible();
+      });
+      test("only the creator of the blog can see the remove button", async ({ page, request }) => {
+        await request.post("/api/users", {
+          data: { name: "John Test", username: "tester", password: "test" },
+        });
+
+        await page.getByRole("button", { name: "logout" }).click();
+        await blogListLogin(page, "tester", "test");
+        await createBlog(page, "Another Title", "Author 2", "some url");
+
+        await page.getByRole("button", { name: "view" }).first().click();
+        await page.getByRole("button", { name: "view" }).last().click();
+
+        await expect(
+          page.getByText("Test title", { exact: true }).locator("../..")
+        ).not.toContainText("remove");
+        await expect(
+          page.getByText("Another Title", { exact: true }).locator("../..")
+        ).toContainText("remove");
       });
     });
   });
