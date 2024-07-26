@@ -57,12 +57,23 @@ describe("Note app", () => {
       });
       test("clicking likes twice should increment the like counter by two", async ({ page }) => {
         await page.getByRole("button", { name: "view" }).click();
-        const likeButton = await page.getByRole("button", { name: "like" });
+        const likeButton = page.getByRole("button", { name: "like" });
 
         await expect(page.getByText("likes 0")).toBeVisible();
         await likeButton.click();
         await likeButton.click();
         await expect(page.getByText("likes 2")).toBeVisible();
+      });
+      test("the creator of the blog should be able to delete it", async ({ page }) => {
+        const blogToRemove = page.getByText("Test title", { exact: true });
+        await expect(blogToRemove).toBeVisible();
+
+        await page.getByRole("button", { name: "view" }).click();
+        page.once("dialog", (dialog) => dialog.accept());
+        await page.getByRole("button", { name: "remove" }).click();
+
+        await expect(blogToRemove).toHaveCount(0);
+        await expect(blogToRemove).not.toBeVisible();
       });
     });
   });
