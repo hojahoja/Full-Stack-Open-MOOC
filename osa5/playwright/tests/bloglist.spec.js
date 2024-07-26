@@ -34,4 +34,23 @@ describe("Note app", () => {
       await expect(page.getByText("John Doe logged in")).toBeVisible();
     });
   });
+  describe("When logged in", () => {
+    beforeEach(async ({ page }) => {
+      blogListLogin(page, "nobody", "passwordsAreForLosers");
+    });
+
+    test("a new blog can be created", async ({ page }) => {
+      await page.getByRole("button", { name: "New blog" }).click();
+      await page
+        .getByPlaceholder("type title here")
+        .fill("The world is a simulation programmed in Lisp");
+      await page.getByPlaceholder("type author here").fill("Bored Senior Developer");
+      await page.getByPlaceholder("type url here").fill("http://awakenprogrammersheeple.edu.lol/");
+      await page.getByRole("button", { name: "create" }).click();
+
+      await expect(
+        page.getByText("The world is a simulation programmed in Lisp", { exact: true })
+      ).toBeVisible();
+    });
+  });
 });
