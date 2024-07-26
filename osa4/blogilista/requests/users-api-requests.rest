@@ -39,3 +39,5 @@ POST http://{{host}}/api/login/
 Content-Type: application/json
 
 {"username": "nobod", "password": "wrong password!"}
+###
+POST http://{{host}}/api/testing/reset/
