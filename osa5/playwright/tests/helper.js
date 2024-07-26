@@ -4,4 +4,12 @@ const blogListLogin = async (page, username, password) => {
   await page.getByRole("button", { name: "login" }).click();
 };
 
-export { blogListLogin };
+const createBlog = async (page, title, author, url) => {
+  await page.getByRole("button", { name: "New blog" }).click();
+  await page.getByPlaceholder("type title here").fill(title);
+  await page.getByPlaceholder("type author here").fill(author);
+  await page.getByPlaceholder("type url here").fill(url);
+  await page.getByRole("button", { name: "create" }).click();
+};
+
+export { blogListLogin, createBlog };

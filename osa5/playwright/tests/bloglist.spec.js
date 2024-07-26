@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require("@playwright/test");
-const { blogListLogin } = require("./helper");
+const { blogListLogin, createBlog } = require("./helper");
 
 describe("Note app", () => {
   beforeEach(async ({ page, request }) => {
@@ -40,17 +40,30 @@ describe("Note app", () => {
     });
 
     test("a new blog can be created", async ({ page }) => {
-      await page.getByRole("button", { name: "New blog" }).click();
-      await page
-        .getByPlaceholder("type title here")
-        .fill("The world is a simulation programmed in Lisp");
-      await page.getByPlaceholder("type author here").fill("Bored Senior Developer");
-      await page.getByPlaceholder("type url here").fill("http://awakenprogrammersheeple.edu.lol/");
-      await page.getByRole("button", { name: "create" }).click();
+      createBlog(
+        page,
+        "The world is a simulation programmed in Lisp",
+        "Bored Senior Developer",
+        "http://awakenprogrammersheeple.edu.lol/"
+      );
 
       await expect(
         page.getByText("The world is a simulation programmed in Lisp", { exact: true })
       ).toBeVisible();
+    });
+    describe("and the list contains a blog", () => {
+      beforeEach(async ({ page }) => {
+        await createBlog(page, "Test title", "Tester", "pretend this is an url");
+      });
+      test("clicking likes twice should increment the like counter by two", async ({ page }) => {
+        await page.getByRole("button", { name: "view" }).click();
+        const likeButton = await page.getByRole("button", { name: "like" });
+
+        await expect(page.getByText("likes 0")).toBeVisible();
+        await likeButton.click();
+        await likeButton.click();
+        await expect(page.getByText("likes 2")).toBeVisible();
+      });
     });
   });
 });
