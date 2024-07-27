@@ -13,7 +13,7 @@ const { defineConfig, devices } = require("@playwright/test");
 module.exports = defineConfig({
   testDir: "./tests",
   /* Custom setting: Shorten the timeout 3 seconds. */
-  timeout: 3000,
+  //timeout: 3000,
   /* Custom setting:  Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */

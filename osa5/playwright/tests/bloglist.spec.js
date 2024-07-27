@@ -51,13 +51,15 @@ describe("Note app", () => {
         page.getByText("The world is a simulation programmed in Lisp", { exact: true })
       ).toBeVisible();
     });
-    describe("and the list contains a blog", () => {
+    describe("and the list contains blogs", () => {
       beforeEach(async ({ page }) => {
         await createBlog(page, "Test title", "Tester", "pretend this is an url");
+        await createBlog(page, "Best title 2", "Best-er 2", "pretend this is another url");
+        await createBlog(page, "Guest title 3", "Fester 3", "Imagine an url");
       });
       test("clicking likes twice should increment the like counter by two", async ({ page }) => {
-        await page.getByRole("button", { name: "view" }).click();
-        const likeButton = page.getByRole("button", { name: "like" });
+        await page.getByRole("button", { name: "view" }).first().click();
+        const likeButton = page.getByRole("button", { name: "like" }).first();
 
         await expect(page.getByText("likes 0")).toBeVisible();
         await likeButton.click();
@@ -68,9 +70,9 @@ describe("Note app", () => {
         const blogToRemove = page.getByText("Test title", { exact: true });
         await expect(blogToRemove).toBeVisible();
 
-        await page.getByRole("button", { name: "view" }).click();
+        await page.getByRole("button", { name: "view" }).first().click();
         page.once("dialog", (dialog) => dialog.accept());
-        await page.getByRole("button", { name: "remove" }).click();
+        await page.getByRole("button", { name: "remove" }).first().click();
 
         await expect(blogToRemove).toHaveCount(0);
         await expect(blogToRemove).not.toBeVisible();
@@ -93,6 +95,45 @@ describe("Note app", () => {
         await expect(
           page.getByText("Another Title", { exact: true }).locator("../..")
         ).toContainText("remove");
+      });
+      test("clicking like sorts the bloglist in a descending order", async ({ page }) => {
+        const titles = ["Test title", "Best title 2", "Guest title 3"];
+
+        // Click View button on each blog and ensure the blogs are in expected order
+        for (let i = 0; i < 3; i++) {
+          await page.getByRole("button", { name: "view" }).first().click();
+          await expect(
+            page.getByRole("button", { name: "hide" }).nth(i).locator("..")
+          ).toContainText(titles[i]);
+        }
+
+        /* Button order inside the array depends on the position on page and are not tied
+        to their specific blog element  */
+        const likeButtons = await page.getByRole("button", { name: "like" }).all();
+        await likeButtons[0].click({ clickCount: 2 });
+        await likeButtons[2].click();
+        await likeButtons[1].click({ clickCount: 2 });
+
+        /* The titles are in expected order after clicks The second element is expected amount of likes
+         for that specific blog */
+        const reorderedTitles = [
+          ["Guest title 3", 3],
+          ["Test title", 2],
+          ["Best title 2", 0],
+        ];
+
+        /* First expectations checks that the blogs are in expected order based on their array position
+        The second expectations checks that the specific blog has correct amount of likes which ensures
+        that they are in descending order */
+        for (let i = 0; i < 3; i++) {
+          await expect(
+            page.getByRole("button", { name: "hide" }).nth(i).locator("..")
+          ).toContainText(reorderedTitles[i][0]);
+
+          await expect(
+            page.getByText(reorderedTitles[i][0], { exact: true }).locator("../..")
+          ).toContainText(`likes ${reorderedTitles[i][1]}`);
+        }
       });
     });
   });
