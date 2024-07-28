@@ -39,8 +39,9 @@ const reducer = (state = initialState, action) => {
       const id = action.payload.id;
       const noteToChange = { ...state.find((a) => a.id === id) };
       noteToChange.votes += 1;
+      const newState = state.map((note) => (note.id !== id ? note : noteToChange));
 
-      return state.map((note) => (note.id !== id ? note : noteToChange));
+      return newState.sort((a, b) => b.votes - a.votes);
     }
     case "NEW_ANECDOTE": {
       return [...state, action.payload];
