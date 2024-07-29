@@ -33,16 +33,15 @@ const AnecdoteList = () => {
     return () => clearTimeout(timeoutID);
   }, [dispatch, notification]);
 
-  const vote = (id) => {
-    dispatch(voteAnecdote(id));
-    const anecdote = anecdotes.find((a) => a.id === id).content;
-    dispatch(showNotification(`you voted "${anecdote}"`));
+  const vote = (anecdote) => {
+    dispatch(voteAnecdote(anecdote));
+    dispatch(showNotification(`you voted "${anecdote.content}"`));
   };
 
   return (
     <div>
       {anecdotes.map((a) => (
-        <Anecdote key={a.id} anecdote={a} handleClick={() => vote(a.id)} />
+        <Anecdote key={a.id} anecdote={a} handleClick={() => vote(a)} />
       ))}
     </div>
   );
