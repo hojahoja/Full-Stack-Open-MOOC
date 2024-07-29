@@ -21,7 +21,9 @@ const AnecdoteList = () => {
   const anecdotes = useSelector(({ filter, anecdotes }) => {
     return filter === ""
       ? anecdotes
-      : anecdotes.filter((anecdote) => anecdote.content.includes(filter));
+      : anecdotes.filter((anecdote) =>
+          anecdote.content.toLowerCase().includes(filter.toLowerCase())
+        );
   });
 
   useEffect(() => {

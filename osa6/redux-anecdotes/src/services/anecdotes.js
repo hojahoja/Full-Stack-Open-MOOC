@@ -3,4 +3,6 @@ const baseUrl = "/anecdotes";
 
 const getAll = async () => (await axios.get(baseUrl)).data;
 
-export default { getAll };
+const create = async (content) => (await axios.post(baseUrl, { content, votes: 0 })).data;
+
+export default { getAll, create };
