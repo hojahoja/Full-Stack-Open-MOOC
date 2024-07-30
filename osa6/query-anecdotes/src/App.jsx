@@ -2,9 +2,23 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
 import { getAllAnecdotes, updateAnecdote } from "../requests";
+import NotificationContext from "./contexts/NotificationContext";
+import { useContext, useEffect } from "react";
 
 const App = () => {
   const queryClient = useQueryClient();
+  const [notification, notificationDispatch] = useContext(NotificationContext);
+
+  /* If you don't clear the timer on each new mount of Notification component
+  then the previous timeout function will clear notifications prematurely 
+  This method renders the page again needlessly after notification is set to null :/ */
+  useEffect(() => {
+    const timerId = setTimeout(() => {
+      notificationDispatch({ type: "HIDE" });
+    }, 5000);
+    return () => clearTimeout(timerId);
+  }, [notification, notificationDispatch]);
+
   const updateAnecdoteMutation = useMutation({
     mutationFn: updateAnecdote,
     onSuccess: (changedAnecdote) => {
@@ -16,6 +30,7 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     updateAnecdoteMutation.mutate({ ...anecdote, votes: anecdote.votes + 1 });
+    notificationDispatch({ type: "SHOW", payload: `you voted: ${anecdote.content}` });
   };
 
   const result = useQuery({

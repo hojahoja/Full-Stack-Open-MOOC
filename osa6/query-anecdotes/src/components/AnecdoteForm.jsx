@@ -1,8 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAnecdote } from "../../requests";
+import { useNotificationDispatch } from "../contexts/NotificationContext";
 
 const AnecdoteForm = () => {
   const queryClient = useQueryClient();
+  const notificationDispatch = useNotificationDispatch();
 
   const newAnecdoteMutation = useMutation({
     mutationFn: createAnecdote,
@@ -10,9 +12,6 @@ const AnecdoteForm = () => {
       const anecdotes = queryClient.getQueryData(["anecdotes"]);
       queryClient.setQueryData(["anecdotes"], anecdotes.concat(newAnecdote));
     },
-    /* for the lulz
-    queryClient.setQueryData(["anecdotes"],queryClient.getQueryData(["anecdotes"]).concat(newAnecdote)),
-    */
   });
 
   const onCreate = async (event) => {
@@ -20,6 +19,7 @@ const AnecdoteForm = () => {
     const content = event.target.anecdote.value;
     event.target.anecdote.value = "";
     newAnecdoteMutation.mutate({ content, votes: 0 });
+    notificationDispatch({ type: "SHOW", payload: `you added: "${content}"` });
   };
 
   return (
