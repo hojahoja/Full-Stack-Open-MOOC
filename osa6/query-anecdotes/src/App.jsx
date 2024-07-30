@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import AnecdoteForm from "./components/AnecdoteForm";
 import Notification from "./components/Notification";
-import { getAll } from "../requests";
+import { getAllAnecdotes } from "../requests";
 
 const App = () => {
   const handleVote = (anecdote) => {
@@ -10,7 +10,8 @@ const App = () => {
 
   const result = useQuery({
     queryKey: ["anecdotes"],
-    queryFn: getAll,
+    queryFn: getAllAnecdotes,
+    refetchOnWindowFocus: false,
   });
 
   if (result.isLoading) {
