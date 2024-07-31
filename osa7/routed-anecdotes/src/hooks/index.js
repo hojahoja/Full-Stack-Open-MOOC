@@ -6,10 +6,16 @@ const useField = (name) => {
   const onChange = (event) => {
     setValue(event.target.value);
   };
+
+  const reset = () => {
+    setValue("");
+  };
+
   return {
     name,
     value,
     onChange,
+    reset,
   };
 };
 

@@ -78,9 +78,16 @@ const Footer = () => (
 );
 
 const CreateNew = ({ addNew, showNotification }) => {
-  const content = useField("content");
-  const author = useField("author");
-  const info = useField("info");
+  const { reset: resetAuthor, ...author } = useField("author");
+  const { reset: resetContent, ...content } = useField("content");
+  const { reset: resetInfo, ...info } = useField("info");
+
+  const resetFields = (e) => {
+    e.preventDefault();
+    resetContent();
+    resetAuthor();
+    resetInfo();
+  };
 
   const navigate = useNavigate();
 
@@ -113,6 +120,7 @@ const CreateNew = ({ addNew, showNotification }) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={resetFields}>reset</button>
       </form>
     </div>
   );
