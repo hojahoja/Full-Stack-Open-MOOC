@@ -5,16 +5,15 @@ import loginService from "./services/login";
 import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
+import { showNotification } from "./reducers/notificationReducer";
+import { useDispatch } from "react-redux";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [statusMessage, setStatusMessage] = useState({
-    message: null,
-    isError: false,
-  });
+  const dispatch = useDispatch();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
@@ -34,10 +33,7 @@ const App = () => {
   }, []);
 
   const showStatusMessage = (message, isError) => {
-    setStatusMessage({ message, isError });
-    setTimeout(() => {
-      setStatusMessage({ message: null, isError: false });
-    }, 5000);
+    dispatch(showNotification(message, isError));
   };
 
   const handleLogin = async (event) => {
@@ -115,7 +111,7 @@ const App = () => {
   const loginForm = () => (
     <>
       <h2>log in to application</h2>
-      <Notification message={statusMessage.message} isError={statusMessage.isError} />
+      <Notification />
       <form onSubmit={handleLogin}>
         <div>
           username
@@ -153,7 +149,7 @@ const App = () => {
       <>
         <div>
           <h2>blogs</h2>
-          <Notification message={statusMessage.message} isError={statusMessage.isError} />
+          <Notification />
           <p>
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
