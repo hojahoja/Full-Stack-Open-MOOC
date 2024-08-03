@@ -1,0 +1,43 @@
+@hostname = localhost
+@port = 3003
+@host = {{hostname}}:{{port}}
+@resource = api/users
+#@blogId = 669372ee42d28ca379809a40
+#@userId = 66961ee8cc7f4ff4f3eb3dd2
+GET http://{{host}}/{{resource}}/
+####
+#GET http://{{host}}/{{resource}}/{{id}}
+###
+#Temproary option to make testing esier for now
+#DELETE http://{{host}}/{{resource}}/
+#DELETE http://{{host}}/{{resource}}/{{id}}
+#####
+#POST http://{{host}}/{{resource}}/
+###
+POST http://{{host}}/{{resource}}/
+Content-Type: application/json
+
+{
+  "username": "nobody",
+  "name": "John Doe",
+  "password": "i-have-no-name"
+}
+###  "__v": 0
+#  "_id": "{{userId}}",
+#  "notes": "{{blogId}}",
+###
+#PUT http://{{host}}/{{resource}}/{{id}}/
+#Content-Type: application/json
+# LOGIN TESTS
+###
+POST http://{{host}}/api/login/
+Content-Type: application/json
+
+{"username": "nobody", "password": "i-have-no-name"}
+###
+POST http://{{host}}/api/login/
+Content-Type: application/json
+
+{"username": "nobod", "password": "wrong password!"}
+###
+POST http://{{host}}/api/testing/reset/

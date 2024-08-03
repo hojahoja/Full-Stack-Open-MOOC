@@ -1,0 +1,41 @@
+@hostname = localhost
+@port = 3003
+@host = {{hostname}}:{{port}}
+@resource = api/blogs
+@id = 6698e23794c223a5c772d896
+@userId = 66961ee8cc7f4ff4f3eb3dd2
+@token = placeholder
+GET http://{{host}}/{{resource}}/
+####
+GET http://{{host}}/{{resource}}/{{id}}
+####
+DELETE http://{{host}}/{{resource}}/{{id}}
+Authorization: Bearer {{token}}
+####
+POST http://{{host}}/{{resource}}/
+####
+POST http://{{host}}/{{resource}}/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Some Blog",
+    "author": "Some Writer",
+    "url": "http://someblogsite.com/",
+    "likes": 0
+}
+
+#"user": "{{userId}}",
+#"_id": "{{id}}",
+#"__v": 0
+####
+PUT http://{{host}}/{{resource}}/{{id}}/
+Content-Type: application/json
+
+{
+  "title": "Some Other Blog",
+  "author": "Some Other Writer",
+  "url": "http://someotherblogsite.com/",
+  "user": "Doesn't matter what is put here",
+  "likes": 0
+}
