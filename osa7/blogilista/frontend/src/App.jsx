@@ -6,21 +6,20 @@ import Notification from "./components/Notification";
 import BlogForm from "./components/BlogForm";
 import Togglable from "./components/Togglable";
 import { showNotification } from "./reducers/notificationReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createNewBlog, initializeBlogList } from "./reducers/blogReducer";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
+  const dispatch = useDispatch();
+  const blogs = useSelector((state) => state.blogs);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const dispatch = useDispatch();
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => {
-      blogs.sort((b1, b2) => b2.likes - b1.likes);
-      setBlogs(blogs);
-    });
-  }, []);
+    dispatch(initializeBlogList());
+  }, [dispatch]);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogConnoisseur");
@@ -64,9 +63,8 @@ const App = () => {
   const handleNewBlog = async (newBlog) => {
     try {
       blogFormRef.current.toggleVisibility();
-      const returnedBlog = await blogService.create(newBlog);
-      setBlogs(blogs.concat(returnedBlog));
-      showStatusMessage(`Added a new blog ${returnedBlog.title}`);
+      dispatch(createNewBlog(newBlog));
+      showStatusMessage(`Added a new blog ${newBlog.title}`);
     } catch (exception) {
       const errorMessage = exception.response.data.error;
       showStatusMessage(errorMessage, true);
