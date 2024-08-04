@@ -1,7 +1,10 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
+import { increaseBlogLikes, removeBlog } from "../reducers/blogReducer";
+import { useDispatch } from "react-redux";
 
-const Blog = ({ blog, user, updateBlog, removeBlog }) => {
+const Blog = ({ blog, user }) => {
+  const dispatch = useDispatch();
   const [fullyVisible, setFullyVisible] = useState(false);
   const { url, likes, author, title } = blog;
   const blogStyle = {
@@ -11,9 +14,14 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
-
   const toggleVisibility = () => {
     setFullyVisible(!fullyVisible);
+  };
+
+  const handleRemoveBlog = (id) => {
+    if (confirm(`Do you want to remove blog:`)) {
+      dispatch(removeBlog(id));
+    }
   };
 
   const additionalInfo = () => {
@@ -22,10 +30,13 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
       <>
         {url}
         <div>
-          <span>likes {likes}</span> <button onClick={() => updateBlog(blog)}>like</button>
+          <span>likes {likes}</span>{" "}
+          <button onClick={() => dispatch(increaseBlogLikes(blog.id))}>like</button>
         </div>
         {author}
-        <div>{userOwnsBlog && <button onClick={() => removeBlog(blog)}>remove</button>}</div>
+        <div>
+          {userOwnsBlog && <button onClick={() => handleRemoveBlog(blog.id)}>remove</button>}
+        </div>
       </>
     );
   };
@@ -43,8 +54,6 @@ const Blog = ({ blog, user, updateBlog, removeBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  updateBlog: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired,
 };
 
 export default Blog;
