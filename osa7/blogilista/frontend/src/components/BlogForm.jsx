@@ -1,57 +1,47 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useRef } from "react";
+import Togglable from "./Togglable";
+import { useDispatch } from "react-redux";
+import { createNewBlog } from "../reducers/blogReducer";
+import useField from "../hooks";
 
-const BlogForm = ({ createBlog }) => {
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+const BlogForm = () => {
+  const { reset: resetTitle, ...titleField } = useField("text");
+  const { reset: resetAuthor, ...authorField } = useField("text");
+  const { reset: resetUrl, ...urlField } = useField("text");
 
-  const addBlog = async (event) => {
+  const toggleRef = useRef();
+  const dispatch = useDispatch();
+
+  const addBlog = (event) => {
     event.preventDefault();
 
-    await createBlog({ title, author, url });
+    const newBlog = { title: titleField.value, author: authorField.value, url: urlField.value };
 
-    setAuthor("");
-    setTitle("");
-    setUrl("");
+    dispatch(createNewBlog(newBlog));
+    toggleRef.current.toggleVisibility();
+
+    resetTitle();
+    resetAuthor();
+    resetUrl();
   };
 
   return (
-    <>
+    <Togglable buttonLabel={"New blog"} ref={toggleRef}>
       <h2>create new</h2>
       <form onSubmit={addBlog}>
         title:
-        <input
-          type="text"
-          placeholder="type title here"
-          value={title}
-          onChange={({ target }) => setTitle(target.value)}
-        />
+        <input {...titleField} placeholder="type title here" />
         <br />
         author:
-        <input
-          type="text"
-          placeholder="type author here"
-          value={author}
-          onChange={({ target }) => setAuthor(target.value)}
-        />
+        <input {...authorField} placeholder="type author here" />
         <br />
         url:
-        <input
-          type="text"
-          placeholder="type url here"
-          value={url}
-          onChange={({ target }) => setUrl(target.value)}
-        />
+        <input {...urlField} placeholder="type url here" />
         <br />
         <button type="submit">create</button>
       </form>
-    </>
+    </Togglable>
   );
-};
-
-BlogForm.propTypes = {
-  createBlog: PropTypes.func.isRequired,
 };
 
 export default BlogForm;

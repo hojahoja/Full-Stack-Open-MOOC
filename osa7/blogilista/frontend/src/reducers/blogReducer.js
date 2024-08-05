@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import blogService from "../services/blogs";
 import { showNotification } from "./notificationReducer";
+import { userLogout } from "./loggedUserReducer";
 
 const blogSlice = createSlice({
   name: "blogs",
@@ -25,43 +26,60 @@ const blogSlice = createSlice({
   },
 });
 
+const thunks = () => {
+  const errorHandler = (dispatch, exception) => {
+    const errorMessage = exception.response.data.error;
+    dispatch(showNotification(errorMessage, true));
+    if (errorMessage === "Session has expired") {
+      dispatch(userLogout());
+    }
+  };
+
+  return {
+    initializeBlogList: () => {
+      return async (dispatch) => {
+        const blogs = await blogService.getAll();
+        dispatch(setBlogs(blogs.toSorted((a, b) => b.likes - a.likes)));
+      };
+    },
+
+    createNewBlog: (newBlog) => {
+      return async (dispatch) => {
+        try {
+          const createdBlog = await blogService.create(newBlog);
+          dispatch(addBlog(createdBlog));
+          dispatch(showNotification(`Added a new blog ${newBlog.title}`));
+        } catch (exception) {
+          errorHandler(dispatch, exception);
+        }
+      };
+    },
+
+    increaseBlogLikes: (id) => {
+      return async (dispatch) => {
+        dispatch(updateBlogLikes({ id, increment: 1 }));
+        try {
+          await blogService.update(id);
+        } catch (exception) {
+          dispatch(updateBlogLikes({ id, increment: -1 }));
+          errorHandler(dispatch, exception);
+        }
+      };
+    },
+
+    removeBlog: (id) => {
+      return async (dispatch) => {
+        try {
+          await blogService.remove(id);
+          dispatch(filterBlogs(id));
+        } catch (exception) {
+          errorHandler(dispatch, exception);
+        }
+      };
+    },
+  };
+};
+
 export const { setBlogs, addBlog, updateBlogLikes, filterBlogs } = blogSlice.actions;
-
-export const initializeBlogList = () => {
-  return async (dispatch) => {
-    const blogs = await blogService.getAll();
-
-    dispatch(setBlogs(blogs.toSorted((a, b) => b.likes - a.likes)));
-  };
-};
-
-export const createNewBlog = (newBlog) => {
-  return async (dispatch) => {
-    const createdBlog = await blogService.create(newBlog);
-    dispatch(addBlog(createdBlog));
-  };
-};
-
-export const increaseBlogLikes = (id) => {
-  return async (dispatch) => {
-    dispatch(updateBlogLikes({ id, increment: 1 }));
-    try {
-      await blogService.update(id);
-    } catch (exception) {
-      dispatch(updateBlogLikes({ id, increment: -1 }));
-      dispatch(showNotification(exception.response.data.error, true));
-    }
-  };
-};
-
-export const removeBlog = (id) => {
-  return async (dispatch) => {
-    try {
-      await blogService.remove(id);
-      dispatch(filterBlogs(id));
-    } catch (exception) {
-      dispatch(showNotification(exception.response.data.error, true));
-    }
-  };
-};
+export const { initializeBlogList, createNewBlog, increaseBlogLikes, removeBlog } = thunks();
 export default blogSlice.reducer;

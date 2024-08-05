@@ -1,10 +1,11 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { increaseBlogLikes, removeBlog } from "../reducers/blogReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog }) => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.loggedUser);
   const [fullyVisible, setFullyVisible] = useState(false);
   const { url, likes, author, title } = blog;
   const blogStyle = {
@@ -14,6 +15,7 @@ const Blog = ({ blog, user }) => {
     borderWidth: 1,
     marginBottom: 5,
   };
+
   const toggleVisibility = () => {
     setFullyVisible(!fullyVisible);
   };
