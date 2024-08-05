@@ -8,14 +8,15 @@ import Togglable from "./components/Togglable";
 import { showNotification } from "./reducers/notificationReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { createNewBlog, initializeBlogList } from "./reducers/blogReducer";
+import { setLoggedUser } from "./reducers/loggedUserReducer";
 
 const App = () => {
   const dispatch = useDispatch();
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.loggedUser);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   useEffect(() => {
     dispatch(initializeBlogList());
@@ -26,10 +27,10 @@ const App = () => {
 
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      dispatch(setLoggedUser(user));
       blogService.setToken(user.token);
     }
-  }, []);
+  }, [dispatch]);
 
   const showStatusMessage = (message, isError) => {
     dispatch(showNotification(message, isError));
@@ -40,7 +41,8 @@ const App = () => {
 
     try {
       const user = await loginService.login({ username, password });
-      setUser(user);
+      dispatch(setLoggedUser(user));
+
       window.localStorage.setItem("loggedBlogConnoisseur", JSON.stringify(user));
       blogService.setToken(user.token);
       setUsername("");
@@ -53,7 +55,7 @@ const App = () => {
   const handleLogout = (event) => {
     event.preventDefault();
 
-    setUser(null);
+    dispatch(setLoggedUser(null));
     blogService.setToken(null);
     window.localStorage.removeItem("loggedBlogConnoisseur");
   };
@@ -69,7 +71,7 @@ const App = () => {
       const errorMessage = exception.response.data.error;
       showStatusMessage(errorMessage, true);
       if (errorMessage === "Session has expired") {
-        setUser(null);
+        dispatch(setLoggedUser(null));
         blogService.setToken(null);
         window.localStorage.removeItem("loggedBlogConnoisseur");
       }
