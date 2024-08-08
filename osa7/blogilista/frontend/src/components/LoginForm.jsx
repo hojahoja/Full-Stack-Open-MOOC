@@ -1,9 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { userLogin, userLogout } from "../reducers/loggedUserReducer";
 import useField from "../hooks";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector((state) => state.loggedUser);
   const { reset: resetUsername, ...userField } = useField("text");
   const { reset: resetPassword, ...passField } = useField("password");
@@ -21,6 +23,7 @@ const LoginForm = () => {
   const handleLogout = (event) => {
     event.preventDefault();
     dispatch(userLogout());
+    navigate("/");
   };
 
   if (user) {

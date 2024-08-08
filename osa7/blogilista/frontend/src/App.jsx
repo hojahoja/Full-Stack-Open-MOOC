@@ -1,12 +1,15 @@
 import { useEffect } from "react";
-import Blog from "./components/Blog";
-import Notification from "./components/Notification";
-import BlogForm from "./components/BlogForm";
 import { useDispatch, useSelector } from "react-redux";
+import { Routes, Route } from "react-router-dom";
+
 import { initializeBlogList } from "./reducers/blogReducer";
 import { setLoggedSession } from "./reducers/loggedUserReducer";
-import UserList from "./components/UserList";
+import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
+import Blog from "./components/Blog";
+import BlogForm from "./components/BlogForm";
+import UserList from "./components/UserList";
+import User from "./components/User";
 
 const BlogList = ({ blogs }) => {
   return (
@@ -41,8 +44,11 @@ const App = () => {
       <div>
         {user && (
           <>
-            <UserList />
-            <BlogList blogs={blogs} />
+            <Routes>
+              <Route path="/" element={<BlogList blogs={blogs} />} />
+              <Route path="/users" element={<UserList />} />
+              <Route path="users/:id" element={<User />} />
+            </Routes>
           </>
         )}
       </div>
