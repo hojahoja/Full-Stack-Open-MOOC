@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { useGetAllUsersQuery } from "../features/apiSlice";
+import { useSelector } from "react-redux";
 
 const UserList = () => {
-  const { data: users, isSuccess } = useGetAllUsersQuery(undefined, {
+  const blogListSize = useSelector((state) => state.blogs.length);
+
+  const { data: users, isSuccess } = useGetAllUsersQuery(blogListSize, {
     selectFromResult: ({ isSuccess, data }) => ({ isSuccess, data }),
   });
 

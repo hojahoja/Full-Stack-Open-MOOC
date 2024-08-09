@@ -1,12 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
-import { userLogin, userLogout } from "../reducers/loggedUserReducer";
+import { useDispatch } from "react-redux";
+import { userLogin } from "../reducers/loggedUserReducer";
 import useField from "../hooks";
-import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const user = useSelector((state) => state.loggedUser);
   const { reset: resetUsername, ...userField } = useField("text");
   const { reset: resetPassword, ...passField } = useField("password");
 
@@ -20,37 +17,21 @@ const LoginForm = () => {
     resetUsername();
   };
 
-  const handleLogout = (event) => {
-    event.preventDefault();
-    dispatch(userLogout());
-    navigate("/");
-  };
-
-  if (user) {
-    return (
-      <>
-        <p>
-          {user.name} logged in <button onClick={handleLogout}>logout</button>
-        </p>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <form onSubmit={handleLogin}>
-          <div>
-            username
-            <input {...userField} name="Username" />
-          </div>
-          <div>
-            password
-            <input {...passField} name="Password" />
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </>
-    );
-  }
+  return (
+    <>
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+          <input {...userField} name="Username" />
+        </div>
+        <div>
+          password
+          <input {...passField} name="Password" />
+        </div>
+        <button type="submit">login</button>
+      </form>
+    </>
+  );
 };
 
 export default LoginForm;

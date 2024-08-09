@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 
 import { initializeBlogList } from "./reducers/blogReducer";
 import { setLoggedSession } from "./reducers/loggedUserReducer";
+import NavBar from "./components/NavBar";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
 import BlogList from "./components/BlogList";
@@ -23,22 +24,25 @@ const App = () => {
   return (
     <div>
       <div>
-        {user ? <h2>blogs</h2> : <h2>log in to application</h2>}
+        <NavBar />
         <Notification />
-        <LoginForm />
       </div>
-      <div>
-        {user && (
-          <>
-            <Routes>
-              <Route path="/" element={<BlogList />} />
-              <Route path="/blogs/:id" element={<Blog />} />
-              <Route path="/users" element={<UserList />} />
-              <Route path="/users/:id" element={<User />} />
-            </Routes>
-          </>
-        )}
-      </div>
+      {!user ? (
+        <div>
+          <h2>log in to application</h2>
+          <LoginForm />
+        </div>
+      ) : (
+        <div>
+          <h2>blog app</h2>
+          <Routes>
+            <Route path="/" element={<BlogList />} />
+            <Route path="/blogs/:id" element={<Blog />} />
+            <Route path="/users" element={<UserList />} />
+            <Route path="/users/:id" element={<User />} />
+          </Routes>
+        </div>
+      )}
     </div>
   );
 };
