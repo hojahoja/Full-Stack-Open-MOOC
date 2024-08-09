@@ -6,27 +6,13 @@ import { initializeBlogList } from "./reducers/blogReducer";
 import { setLoggedSession } from "./reducers/loggedUserReducer";
 import Notification from "./components/Notification";
 import LoginForm from "./components/LoginForm";
+import BlogList from "./components/BlogList";
 import Blog from "./components/Blog";
-import BlogForm from "./components/BlogForm";
 import UserList from "./components/UserList";
 import User from "./components/User";
 
-const BlogList = ({ blogs }) => {
-  return (
-    <>
-      <BlogForm />
-      <div>
-        {blogs.map((blog) => (
-          <Blog key={blog.id} blog={blog} />
-        ))}
-      </div>
-    </>
-  );
-};
-
 const App = () => {
   const dispatch = useDispatch();
-  const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.loggedUser);
 
   useEffect(() => {
@@ -45,9 +31,10 @@ const App = () => {
         {user && (
           <>
             <Routes>
-              <Route path="/" element={<BlogList blogs={blogs} />} />
+              <Route path="/" element={<BlogList />} />
+              <Route path="/blogs/:id" element={<Blog />} />
               <Route path="/users" element={<UserList />} />
-              <Route path="users/:id" element={<User />} />
+              <Route path="/users/:id" element={<User />} />
             </Routes>
           </>
         )}

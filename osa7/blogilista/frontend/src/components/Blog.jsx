@@ -1,61 +1,41 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
-import { increaseBlogLikes, removeBlog } from "../reducers/blogReducer";
+import { increaseBlogLikes, initializeBlogList, removeBlog } from "../reducers/blogReducer";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Blog = ({ blog }) => {
+const Blog = () => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.loggedUser);
-  const [fullyVisible, setFullyVisible] = useState(false);
-  const { url, likes, author, title } = blog;
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
-  const toggleVisibility = () => {
-    setFullyVisible(!fullyVisible);
-  };
+  const navigate = useNavigate();
+  const { id: blogId } = useParams();
+  const loggedUser = useSelector((state) => state.loggedUser);
+  const blog = useSelector((state) => state.blogs.find((b) => b.id === blogId));
 
   const handleRemoveBlog = (id) => {
     if (confirm(`Do you want to remove blog:`)) {
       dispatch(removeBlog(id));
+      navigate("/");
     }
   };
 
-  const additionalInfo = () => {
-    const userOwnsBlog = user ? blog.user.id === user.id || blog.user === user.id : false;
-    return (
-      <>
-        {url}
-        <div>
-          <span>likes {likes}</span>{" "}
-          <button onClick={() => dispatch(increaseBlogLikes(blog.id))}>like</button>
-        </div>
-        {author}
-        <div>
-          {userOwnsBlog && <button onClick={() => handleRemoveBlog(blog.id)}>remove</button>}
-        </div>
-      </>
-    );
-  };
+  if (!blog) return <div>loading...</div>;
 
+  const { url, likes, author, title } = blog;
+  const userOwnsBlog = loggedUser
+    ? blog.user.id === loggedUser.id || blog.user === loggedUser.id
+    : false;
   return (
-    <div style={blogStyle}>
+    <div>
+      <h2>{title}</h2>
+      <a href={url} target="_blank" rel="noreferrer">
+        {url}
+      </a>
       <div>
-        <span>{title}</span>{" "}
-        <button onClick={toggleVisibility}>{fullyVisible ? "hide" : "view"}</button>
+        <span>likes {likes}</span>
+        <button onClick={() => dispatch(increaseBlogLikes(blog.id))}>like</button>
       </div>
-      {fullyVisible && additionalInfo()}
+      added by {author} <br />
+      {userOwnsBlog && <button onClick={() => handleRemoveBlog(blog.id)}>remove</button>}
     </div>
   );
-};
-
-Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
 };
 
 export default Blog;
