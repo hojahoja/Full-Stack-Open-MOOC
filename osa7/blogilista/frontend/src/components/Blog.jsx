@@ -18,7 +18,7 @@ const Blog = () => {
 
   if (!blog) return <div>loading...</div>;
 
-  const { url, likes, author, title } = blog;
+  const { url, likes, author, title, comments } = blog;
   const userOwnsBlog = loggedUser
     ? blog.user.id === loggedUser.id || blog.user === loggedUser.id
     : false;
@@ -34,6 +34,14 @@ const Blog = () => {
       </div>
       added by {author} <br />
       {userOwnsBlog && <button onClick={() => handleRemoveBlog(blog.id)}>remove</button>}
+      <div>
+        <h3>comments</h3>
+        <ul>
+          {comments.map((c, i) => (
+            <li key={`${comments}${i}`}>{c}</li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

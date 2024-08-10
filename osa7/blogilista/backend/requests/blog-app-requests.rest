@@ -39,3 +39,8 @@ Content-Type: application/json
   "user": "Doesn't matter what is put here",
   "likes": 0
 }
+###
+POST http://{{host}}/{{resource}}/{{id}}/comments/
+Content-Type: application/json
+
+{"comment": "This is a comment."}

@@ -23,6 +23,15 @@ blogsRouter.post("/", userExtractor, async (req, res) => {
   res.status(201).json(savedBlog);
 });
 
+blogsRouter.post("/:id/comments", async (req, res) => {
+  const comment = req.body.comment;
+  const commentedBlog = await Blog.findById(req.params.id);
+
+  commentedBlog.comments = commentedBlog.comments.concat(comment);
+  await commentedBlog.save();
+  res.status(201).json(commentedBlog);
+});
+
 blogsRouter.delete("/:id", userExtractor, async (req, res) => {
   const blogToDelete = req.params.id;
   const user = req.user;
