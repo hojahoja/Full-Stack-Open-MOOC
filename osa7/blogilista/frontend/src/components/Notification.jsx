@@ -15,7 +15,13 @@ const Notification = () => {
     marginBottom: 10,
   };
 
-  return <div style={isError ? { ...infoStyle, borderColor: "red" } : infoStyle}>{message}</div>;
+  return (
+    <div
+      className={`rounded-xl border-2 p-2 text-center text-xl font-semibold
+        ${isError ? "border-red-600 bg-red-50" : "border-green-800 bg-green-50"}`}>
+      {message}
+    </div>
+  );
 };
 
 export default Notification;

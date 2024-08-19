@@ -5,25 +5,19 @@ import BlogForm from "./BlogForm";
 const BlogList = () => {
   const blogs = useSelector((state) => state.blogs);
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
   return (
-    <>
+    <div className="flex flex-col">
       <BlogForm />
-      <div>
-        {blogs.map((blog) => (
-          <div key={blog.id} style={blogStyle}>
-            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-          </div>
-        ))}
-      </div>
-    </>
+      {blogs.map((blog) => (
+        <div
+          key={blog.id}
+          className="mx-6 my-1 rounded border text-center text-xl hover:bg-slate-50">
+          <Link className="block w-full p-2" to={`/blogs/${blog.id}`}>
+            {blog.title}
+          </Link>
+        </div>
+      ))}
+    </div>
   );
 };
 

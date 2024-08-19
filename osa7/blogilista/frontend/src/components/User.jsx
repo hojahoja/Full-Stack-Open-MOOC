@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetAllUsersQuery } from "../features/apiSlice";
 import { useSelector } from "react-redux";
 
@@ -11,14 +11,16 @@ const User = () => {
   });
 
   const user = isSuccess ? users.find((u) => u.id === id) : null;
-
   const userDetails = () => (
-    <div>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
+    <div className="flex flex-col items-center">
+      <h2>{`${user.name}'s added blogs`}</h2>
+      <ul className="first my-1 w-full text-center">
         {user.blogs.map((b) => (
-          <li key={b.id}>{b.title}</li>
+          <li className="mx-6 my-2 rounded border text-xl hover:bg-slate-50" key={b.id}>
+            <Link className="block p-2" to={`/blogs/${b.id}`}>
+              {b.title}
+            </Link>
+          </li>
         ))}
       </ul>
     </div>

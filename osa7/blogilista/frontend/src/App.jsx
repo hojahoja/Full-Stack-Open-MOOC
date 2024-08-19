@@ -22,19 +22,21 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    <div>
-      <div>
+    <div className="container mx-auto flex w-full flex-col items-center justify-center md:w-fit lg:w-full">
+      <div className="sticky top-0 z-10 m-6 w-full lg:w-full">
         <NavBar />
-        <Notification />
+        <div className="my-2 empty:hidden ">
+          <Notification />
+        </div>
       </div>
       {!user ? (
-        <div>
-          <h2>log in to application</h2>
+        <div className="mt-24">
+          <h1 className="pb-4">Log in to application</h1>
           <LoginForm />
         </div>
       ) : (
-        <div>
-          <h2>blog app</h2>
+        <div className="mx-auto w-full">
+          <h1 className="pb-2 text-center">Blog App</h1>
           <Routes>
             <Route path="/" element={<BlogList />} />
             <Route path="/blogs/:id" element={<Blog />} />
