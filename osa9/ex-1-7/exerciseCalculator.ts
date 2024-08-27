@@ -1,3 +1,5 @@
+import getCliArgs from "./cliArgumentExtractor";
+
 interface ExerciseData {
   periodLength: number;
   trainingDays: number;
@@ -8,7 +10,9 @@ interface ExerciseData {
   average: number;
 }
 
-const calculateExercises = (hours: number[], target: number): ExerciseData => {
+const calculateExercises = (cliArgs: number[]): ExerciseData => {
+  const [target, ...hours]: number[] = cliArgs;
+
   const trainingDays: number = hours.reduce((acc, curr) => (curr !== 0 ? acc + 1 : acc), 0);
   const average: number = hours.reduce((acc, curr) => acc + curr, 0) / hours.length;
   const success: boolean = average > target;
@@ -33,4 +37,11 @@ const calculateExercises = (hours: number[], target: number): ExerciseData => {
   };
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2));
+try {
+  const cliArgs: number[] = getCliArgs();
+  console.log(calculateExercises(cliArgs));
+} catch (error: unknown) {
+  let errorMessage = "Something went wrong";
+  if (error instanceof Error) errorMessage = `${errorMessage}: ${error.message}`;
+  console.log(errorMessage);
+}

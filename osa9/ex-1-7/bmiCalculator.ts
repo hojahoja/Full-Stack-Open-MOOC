@@ -1,3 +1,5 @@
+import getCliArgs from "./cliArgumentExtractor";
+
 const calculateBmi = (cm: number, kg: number): string => {
   const bmi: number = kg / (cm / 100) ** 2;
 
@@ -20,4 +22,12 @@ const calculateBmi = (cm: number, kg: number): string => {
   }
 };
 
-console.log(calculateBmi(180, 74));
+try {
+  const cliArgs: number[] = getCliArgs();
+  if (cliArgs.length !== 2) throw new Error(`Expected 2 arguments got ${cliArgs.length}`);
+  console.log(calculateBmi(cliArgs[0], cliArgs[1]));
+} catch (error: unknown) {
+  let errorMessage = "Something went wrong";
+  if (error instanceof Error) errorMessage = `${errorMessage}: ${error.message}`;
+  console.log(errorMessage);
+}
