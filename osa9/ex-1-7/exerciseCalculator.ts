@@ -1,6 +1,6 @@
 import getCliArgs from "./cliArgumentExtractor";
 
-interface ExerciseData {
+export interface ExerciseData {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -37,11 +37,15 @@ const calculateExercises = (cliArgs: number[]): ExerciseData => {
   };
 };
 
-try {
-  const cliArgs: number[] = getCliArgs();
-  console.log(calculateExercises(cliArgs));
-} catch (error: unknown) {
-  let errorMessage = "Something went wrong";
-  if (error instanceof Error) errorMessage = `${errorMessage}: ${error.message}`;
-  console.log(errorMessage);
+if (require.main === module) {
+  try {
+    const cliArgs: number[] = getCliArgs();
+    console.log(calculateExercises(cliArgs));
+  } catch (error: unknown) {
+    let errorMessage = "Something went wrong";
+    if (error instanceof Error) errorMessage = `${errorMessage}: ${error.message}`;
+    console.log(errorMessage);
+  }
 }
+
+export { calculateExercises };
