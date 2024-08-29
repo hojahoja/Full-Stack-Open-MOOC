@@ -22,12 +22,16 @@ const calculateBmi = (cm: number, kg: number): string => {
   }
 };
 
-try {
-  const cliArgs: number[] = getCliArgs();
-  if (cliArgs.length !== 2) throw new Error(`Expected 2 arguments got ${cliArgs.length}`);
-  console.log(calculateBmi(cliArgs[0], cliArgs[1]));
-} catch (error: unknown) {
-  let errorMessage = "Something went wrong";
-  if (error instanceof Error) errorMessage = `${errorMessage}: ${error.message}`;
-  console.log(errorMessage);
+if (require.main === module) {
+  try {
+    const cliArgs: number[] = getCliArgs();
+    if (cliArgs.length !== 2) throw new Error(`Expected 2 arguments got ${cliArgs.length}`);
+    console.log(calculateBmi(cliArgs[0], cliArgs[1]));
+  } catch (error: unknown) {
+    let errorMessage = "Something went wrong";
+    if (error instanceof Error) errorMessage = `${errorMessage}: ${error.message}`;
+    console.log(errorMessage);
+  }
 }
+
+export { calculateBmi };
